@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface HoaDonRepo extends JpaRepository<HoaDon,Integer> {
     @Query("select count(hd) from HoaDon hd where hd.trangthai = 0 ")
     int countHoaDonByTrangthai();
+    @Query("select count(hd) from HoaDon hd")
+    int countHoaDon();
 }

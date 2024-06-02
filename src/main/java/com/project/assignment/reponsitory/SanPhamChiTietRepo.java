@@ -15,5 +15,4 @@ import java.util.List;
 public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet,Integer> {
     @Query("SELECT spct FROM SanPhamChiTiet spct JOIN SanPham sp ON spct.sanpham.id = sp.id WHERE spct.sanpham.id = :id")
     Page<SanPhamChiTiet> findSanPhamChiTietBySanphamId(@Param("id") Integer idsp, Pageable pageable);
-//    SanPhamChiTiet findSanPhamChiTietBySanphamId(Integer idsp);
 }

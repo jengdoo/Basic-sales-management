@@ -21,7 +21,7 @@
            <div class="rounded-pill" style="background-color: lightgrey;width: 228px">
                <div class="text-center m-3">
                    <h5>Tổng số hóa đơn</h5>
-                   <div>7</div>
+                   <div>${tongHoaDon}</div>
                </div>
            </div>
             <div class="rounded-pill" style="background-color:  lightgrey;width: 228px;margin-left: 190px">
@@ -70,7 +70,7 @@
                             <td>${hd.nhanvien.ten}</td>
                             <td>${hd.ngaymuahang}</td>
                             <td>
-                                <a href="" class="btn btn-primary">Xem</a>
+                                <a href="/admin/hoadonview/hoadonchitiet/${hd.id}" class="btn btn-primary">Xem</a>
                             </td>
                         </tr>
                     </c:forEach>

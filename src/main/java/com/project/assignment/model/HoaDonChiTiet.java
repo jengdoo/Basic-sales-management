@@ -1,5 +1,6 @@
 package com.project.assignment.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +12,23 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "HoaDonChiTiet")
 public class HoaDonChiTiet {
-    private int id;
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Integer id;
+    @OneToOne
+    @JoinColumn(name = "IdHoaDon",referencedColumnName = "id")
     private HoaDon hoadon;
+    @ManyToOne
+    @JoinColumn(name = "IdSPCT",referencedColumnName = "id")
     private SanPhamChiTiet spct;
-    private int soluong;
-    private double dongia;
-    private List<String> trangthai;
+    @Column(name = "SoLuong")
+    private Integer soluong;
+    @Column(name = "DonGia")
+    private Double dongia;
+    @Column(name = "TrangThai")
+    private Integer trangthai;
 }

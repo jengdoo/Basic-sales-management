@@ -1,4 +1,5 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,6 +17,7 @@
 <body>
     <div class="container">
         <div class="border mt-3">
+            <form action="/admin/hoadon/hoadonchitiet" name="hoadonchitiet" method="post">
             <div style="margin-left: 55px">
                 <div class="d-flex justify-content-between">
                     <div class="d-flex" style="margin-top: 28px">
@@ -26,31 +28,28 @@
                         </div>
                     </div>
                     <div style="margin-top: 28px;margin-right: 55px">
-                        <h5>HÓA ĐƠN #123</h5>
-                        <p>ngày...tháng...năm</p>
+                        <h5>HÓA ĐƠN #${hoadonchitiet.hoadon.id}</h5>
+                        <p>${hoadonchitiet.hoadon.ngaymuahang}</p>
                     </div>
                 </div>
                 <h2 style="margin-top: 28px">HÓA ĐƠN</h2>
                 <div style="margin-top: 28px">
-                    <h5>Tên khách hàng</h5>
-                    <p>Số điện thoại khách hàng:0000 <br>
-                        Địa chỉ khách hàng: abcc
+                    <h5>Tên khách hàng-${hoadonchitiet.hoadon.khachhang.tenkh}</h5>
+                    <p>Số điện thoại khách hàng: ${hoadonchitiet.hoadon.khachhang.sodt} <br>
+                        Địa chỉ khách hàng: chưa cập nhật
                     </p>
                 </div>
                 <div style="margin-top: 28px">
-                    <table class="table">
-                        <thead>
-                            <th>Số hóa đơn</th>
-                            <th>Sản phẩm</th>
-                            <th>Số lượng</th>
-                            <th>Đơn giá</th>
-                        </thead>
-                        <tbody>
-                            <tr></tr>
-                        </tbody>
-                    </table>
+                        ID: <input type="text" name="id" class="form-control" value="${hoadonchitiet.id}"> <br>
+                        Mã hóa đơn: <input type="text" name="hoadon" value="${hoadonchitiet.hoadon.id}" class="form-control"> <br>
+                        Tên sản phẩm: <input type="text" name="spct" value="${hoadonchitiet.spct.sanpham.tensp}" class="form-control"> <br>
+                        Số lượng: <input type="text" name="soluong" value="${hoadonchitiet.soluong}" class="form-control"> <br>
+                        Tổng tiền: <input type="text" name="dongia" value="${hoadonchitiet.dongia}" class="form-control"> <br>
+                        Trạng thái: <input type="text" name="trangthai" value="${hoadonchitiet.trangthai}"  class="form-control"> <br>
                 </div>
             </div>
+                <a href="/admin/hoadonview/hoadon" class="btn btn-secondary">Quay lại</a>
+            </form>
         </div>
 
     </div>

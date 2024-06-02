@@ -5,6 +5,7 @@ import com.project.assignment.reponsitory.HoaDonRepo;
 import com.project.assignment.reponsitory.KhachHangRepo;
 import com.project.assignment.reponsitory.NhanVienRepo;
 import com.project.assignment.reponsitory.SanPhamChiTietRepo;
+import com.project.assignment.service.HoaDonChiTietSevice;
 import com.project.assignment.service.implement.HoaDonIpl;
 import com.project.assignment.service.implement.KhachHangIpl;
 import com.project.assignment.service.implement.NhanVienimp;
@@ -172,7 +173,11 @@ public class HoaDonController {
     }
 
     @ModelAttribute("hoadoncho")
-    public int hoaDonHuy(Model model){
+    public int hoaDonHuy(){
         return hoaDonIpl.hoaDonHuy();
+    }
+    @ModelAttribute("tongHoaDon")
+    public int tongHoaDon(){
+        return hoaDonRepo.countHoaDon();
     }
 }
