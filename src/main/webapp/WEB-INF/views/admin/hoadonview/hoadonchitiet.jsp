@@ -28,30 +28,52 @@
                         </div>
                     </div>
                     <div style="margin-top: 28px;margin-right: 55px">
-                        <h5>HÓA ĐƠN #${hoadonchitiet.hoadon.id}</h5>
-                        <p>${hoadonchitiet.hoadon.ngaymuahang}</p>
+                        <h5>HÓA ĐƠN #<%-- ${hoadonchitiet.hoadon.id}--%></h5>
+                        <p><%-- ${hoadonchitiet.hoadon.ngaymuahang}--%></p>
                     </div>
                 </div>
                 <h2 style="margin-top: 28px">HÓA ĐƠN</h2>
                 <div style="margin-top: 28px">
-                    <h5>Tên khách hàng-${hoadonchitiet.hoadon.khachhang.tenkh}</h5>
-                    <p>Số điện thoại khách hàng: ${hoadonchitiet.hoadon.khachhang.sodt} <br>
+                    <h5>Tên khách hàng-<%-- ${hoadonchitiet.hoadon.khachhang.tenkh}--%></h5>
+                    <p>Số điện thoại khách hàng: <%-- ${hoadonchitiet.hoadon.khachhang.sodt}--%> <br>
                         Địa chỉ khách hàng: chưa cập nhật
                     </p>
                 </div>
                 <div style="margin-top: 28px">
-                        ID: <input type="text" name="id" class="form-control" value="${hoadonchitiet.id}"> <br>
-                        Mã hóa đơn: <input type="text" name="hoadon" value="${hoadonchitiet.hoadon.id}" class="form-control"> <br>
-                        Tên sản phẩm: <input type="text" name="spct" value="${hoadonchitiet.spct.sanpham.tensp}" class="form-control"> <br>
-                        Số lượng: <input type="text" name="soluong" value="${hoadonchitiet.soluong}" class="form-control"> <br>
-                        Tổng tiền: <input type="text" name="dongia" value="${hoadonchitiet.dongia}" class="form-control"> <br>
-                        Trạng thái: <input type="text" name="trangthai" value="${hoadonchitiet.trangthai}"  class="form-control"> <br>
+<%--                        Mã hóa đơn: <input type="text" value="${hoadonchitiet.hoadon.id}" class="form-control"> <br>--%>
+                        <div style="margin-top: 28px">
+                        <table class="table table-striped">
+                            <thead>
+                            <th>STT</th>
+                            <th>Mã hóa đơn chi tiết</th>
+                            <th>Mã SPCT</th>
+                            <th>Ten san pham</th>
+                            <th>Giá sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Tiền</th>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="hdct" items="${hoadonchitiet}" varStatus="stt">
+                                <tr>
+                                    <td>${stt.index+1}</td>
+                                    <td>${hdct.id}</td>
+                                    <td>${hdct.spct.maspct}</td>
+                                    <td>${hdct.spct.sanpham.tensp}</td>
+                                    <td>${hdct.spct.dongia}</td>
+                                    <td>${hdct.soluong}</td>
+                                    <td>${hdct.dongia}</td>
+                                </tr>
+<%--                                <tr>Trạng thái: <c:if test="${hoadonchitiet.trangthai==2}">Đã thanh toán</c:if></tr>--%>
+                            </c:forEach>
+                            </tbody>
+
+                        </table>
+                        </div>
                 </div>
             </div>
                 <a href="/admin/hoadonview/hoadon" class="btn btn-secondary">Quay lại</a>
             </form>
         </div>
-
     </div>
 </body>
 </html>

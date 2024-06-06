@@ -30,7 +30,7 @@
             <form:form action="/admin/khachhangview/khachhang" method="post" modelAttribute="khachhang">
                 <div class="d-flex justify-content-center">
                     <div>
-                        ID:<form:input path="id" cssClass="form-control" cssStyle="width: 400px"/>
+                        ID:<form:input path="id" cssClass="form-control" cssStyle="width: 400px" readonly="true" />
                        <div class="mt-3">
                            Mã khách hàng:<form:input path="makh" cssClass="form-control" cssStyle="width: 400px"/>
                            <form:errors path="makh" cssClass="text-danger"/>

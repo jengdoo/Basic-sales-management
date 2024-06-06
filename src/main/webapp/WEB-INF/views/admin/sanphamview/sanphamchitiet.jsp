@@ -80,8 +80,8 @@
                 </table>
                 <div class="mt-3 text-center">
                     <a href="/admin/sanphamview/sanphamchitiet" class="btn btn-secondary">First</a>
-                    <a href="/admin/sanphamview/sanphamchitiet?p=${lstspct.number-1}" class="btn btn-secondary">Prev</a>
-                    <a href="/admin/sanphamview/sanphamchitiet?p=${lstspct.number+1}" class="btn btn-secondary">Next</a>
+                    <a href="/admin/sanphamview/sanphamchitiet?p=${lstspct.first?lstsp.totalPages-1:lstsp.number-1}" class="btn btn-secondary">Prev</a>
+                    <a href="/admin/sanphamview/sanphamchitiet?p=${lstspct.last?0:lstsp.number+1}" class="btn btn-secondary">Next</a>
                     <a href="/admin/sanphamview/sanphamchitiet?p=${lstspct.totalPages-1}" class="btn btn-secondary">Last</a>
                 </div>
             </div>

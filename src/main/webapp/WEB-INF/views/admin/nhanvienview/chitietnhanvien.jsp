@@ -31,7 +31,7 @@
         <form:radiobutton path="trangthai" cssClass="form-check-input ms-3" value="true"/>Còn hoạt động
         <form:radiobutton path="trangthai" cssClass="form-check-input ms-3" value="false"/>Dừng hoạt động
         <div class="text-center">
-            <a href="/admin/nhanivenview/nhanvien" class="btn btn-secondary">Quay lại</a>
+            <a href="/admin/nhanvienview/nhanvien" class="btn btn-secondary">Quay lại</a>
             <button class="btn btn-warning ms-3">Update</button></div>
     </form:form>
 </div>

@@ -30,7 +30,7 @@ public class NhanVienController {
             return "admin/nhanvienview/nhanvien";
         }
         nhanVienimp.create(nhanvien);
-        return "admin/nhanvienview/nhanvien";
+        return "redirect:/admin/nhanvienview/nhanvien";
     }
     @GetMapping("/detail/{id}")
     public String detailNhanVien(@PathVariable("id") int id,Model model){
@@ -58,11 +58,12 @@ public class NhanVienController {
     public String searchByName(@RequestParam("ten") String ten,
                                @RequestParam(name = "p",defaultValue = "0") int p,
                                Model model){
+        model.addAttribute("nhanvien",new NhanVien());
         Page<NhanVien> lstnvs = nhanVienimp.getByName(ten,p);
         if(lstnvs.isEmpty()){
             return "redirect:/admin/nhanvienview/nhanvien";
         }
         model.addAttribute("lstnv",lstnvs);
-        return "forward:/admin/nhanvienview/nhanvien";
+        return "admin/nhanvienview/nhanvien";
     }
 }

@@ -17,8 +17,6 @@
     <div class="container">
         <h1 class="text-center">Thêm sản phẩm</h1>
         <form:form cssClass="mt-3" modelAttribute="sanpham" action="/admin/sanphamview/add" method="post">
-            ID:<form:input path="id" cssClass="form-control"/> <br>
-            <form:errors path="id" cssClass="text-danger"/>
             Mã sản phẩm:<form:input path="masp" cssClass="form-control"/> <br>
             <form:errors path="masp" cssClass="text-danger"/>
             Tên sản phẩm:<form:input path="tensp" cssClass="form-control"/> <br>

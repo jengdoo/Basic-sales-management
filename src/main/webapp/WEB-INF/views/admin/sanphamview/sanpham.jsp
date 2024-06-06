@@ -63,8 +63,8 @@
             </table>
             <div class="text-center mt-3">
                 <a href="/admin/sanphamview/sanpham" class="btn btn-secondary">First</a>
-                <a href="/admin/sanphamview/sanpham?p=${lstsp.number-1}" class="btn btn-secondary">Prev</a>
-                <a href="/admin/sanphamview/sanpham?p=${lstsp.number+1}" class="btn btn-secondary">Next</a>
+                <a href="/admin/sanphamview/sanpham?p=${lstsp.first?lstsp.totalPages-1:lstsp.number-1}" class="btn btn-secondary">Prev</a>
+                <a href="/admin/sanphamview/sanpham?p=${lstsp.last?0:lstsp.number+1}" class="btn btn-secondary">Next</a>
                 <a href="/admin/sanphamview/sanpham?p=${lstsp.totalPages-1}" class="btn btn-secondary">Last</a>
             </div>
         </div>
