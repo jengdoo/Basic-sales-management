@@ -30,17 +30,6 @@
                                 <input type="checkbox" class="form-check-input" onclick="showPassword()">Hiển thị mật khẩu
                             </div>
                         </div>
-                        <div class="mt-3 d-flex">
-                            <label class="form-label me-3">Vai trò:</label>
-                            <div class="form-check me-3">
-                                <input class="form-check-input" type="radio" value="true" name="trangthai">
-                                <label class="form-check-label">Admin</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" value="false" name="trangthai">
-                                <label class="form-check-label">Nhân viên</label>
-                            </div>
-                        </div>
                         <div class="mb-3">
                             <a href="/user/forgot">Forgot pass word?</a>
                         </div>
