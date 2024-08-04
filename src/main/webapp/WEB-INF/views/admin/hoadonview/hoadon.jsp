@@ -62,9 +62,9 @@
                         <tr>
                             <td>${hd.id}</td>
                             <td>
-                                <c:if test="${hd.trangthai==0}">Chờ thanh toán</c:if>
-                                <c:if test="${hd.trangthai==1}">Hóa đơn bị hủy</c:if>
-                                <c:if test="${hd.trangthai==2}">Đã thanh toán</c:if>
+                                <c:if test="${hd.trangThai == 0}">Chờ thanh toán</c:if>
+                                <c:if test="${hd.trangThai == 1}">Hóa đơn bị hủy</c:if>
+                                <c:if test="${hd.trangThai == 2}">Đã thanh toán</c:if>
                             </td>
                             <td>${hd.khachhang.tenkh}</td>
                             <td>${hd.nhanvien.ten}</td>

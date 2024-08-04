@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,9 +29,15 @@ public class HoaDonChiTietIpl implements HoaDonChiTietSevice {
         SanPhamChiTiet spct = hoaDonChiTiet.getSpct();
         Integer soluong = hoaDonChiTiet.getSoluong();
         Double dongia = hoaDonChiTiet.getDongia();
-        LocalTime time = LocalTime.now();
+        Date time = new Date();
         Integer trangthai = hoaDonChiTiet.getTrangthai();
         HoaDonChiTiet hdct = new HoaDonChiTiet(hd,spct,soluong,dongia,time,trangthai);
         hoaDonChiTietRepo.save(hdct);
     }
+
+    @Override
+    public List<HoaDonChiTiet> getAll() {
+        return hoaDonChiTietRepo.findAll();
+    }
+
 }

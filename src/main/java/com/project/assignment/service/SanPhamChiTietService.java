@@ -17,4 +17,5 @@ public interface SanPhamChiTietService {
     void update(SanPhamChiTiet spct);
     SanPhamChiTiet getByID(Integer id);
     List<SanPhamChiTiet> getByIdToBanHang(Integer id);
+    List<SanPhamChiTiet> getAll();
 }

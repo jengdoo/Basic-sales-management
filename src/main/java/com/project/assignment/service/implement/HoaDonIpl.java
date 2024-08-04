@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class HoaDonIpl implements HoaDonService {
     @Autowired
@@ -39,7 +41,7 @@ public class HoaDonIpl implements HoaDonService {
     public void create(HoaDon hoaDon) {
         NhanVien nv = hoaDon.getNhanvien();
         KhachHang kh = hoaDon.getKhachhang();
-        LocalDate ngaymua = LocalDate.now();
+        Date ngaymua = new Date();
         int  tt= 0;
         HoaDon hd = new HoaDon(nv,kh,ngaymua,tt);
         lsthd.add(hd);
@@ -51,8 +53,8 @@ public class HoaDonIpl implements HoaDonService {
     }
     public HoaDon updateHoaDon(int id){
         for(HoaDon h : lsthd){
-                if(h.getId()==id){
-                    lsthd.remove(h);
+            if(h.getId()==id){
+                lsthd.remove(h);
             }
             return h;
         }

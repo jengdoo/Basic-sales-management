@@ -70,4 +70,9 @@ public class SanPhamChiTietEpl implements SanPhamChiTietService {
         return sanPhamChiTietRepo.findAll();
     }
 
+    @Override
+    public List<SanPhamChiTiet> getAll() {
+        return sanPhamChiTietRepo.findAll();
+    }
+
 }

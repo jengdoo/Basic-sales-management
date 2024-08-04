@@ -1,228 +1,225 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
-    <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <title>Bán hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .border-custom {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .form-control, .form-select {
+            height: 45px;
+        }
+        .btn-custom {
+            margin-left: 10px;
+        }
+        .d-flex-justify-between {
+            display: flex;
+            justify-content: space-between;
+        }
+        .action-buttons {
+            margin-top: 20px;
+        }
+        .mt-3-custom {
+            margin-top: 30px;
+        }
+        .btn {
+            border-radius: 20px;
+        }
+        .table thead th {
+            background-color: #007bff;
+            color: white;
+        }
+        .table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center">Bán hàng</h1>
-            <div class="d-flex">
-                <div style="width: 100%">
-                    <div class="border">
-                        <div style="margin: 28px">
-                            <div class="d-flex">
-                                <div>
-                                    <h5>Hóa đơn chờ</h5>
-                                    <table class="table">
-                                        <thead>
-                                        <th>Mã hóa đơn</th>
-                                        <th>Ngày mua</th>
-                                        <th>Người nhận</th>
-                                        <th>Nhân viên</th>
-                                        <th>Action</th>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach var="hdbh" items="${lsthd}">
-                                            <tr>
-                                                <td>${hdbh.id}</td>
-                                                <td>${hdbh.ngaymuahang}</td>
-                                                <td>${hdbh.khachhang.tenkh}</td>
-                                                <td>${hdbh.nhanvien.ten}</td>
-                                                <td>
-                                                    <a href="/admin/hoadonview/huyhoadon?id=${hdbh.id}" class="btn btn-warning">Hủy</a>
-                                                    <a href="/admin/hoadonview/choose/${hdbh.id}" class="btn btn-primary">Chọn</a>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div style="margin-left: 100px;">
-                                    <h5>Hóa đơn</h5>
-                                    <form action="/admin/hoadonview/taoHD" method="post">
-                                        <div class="text-success">${messagehd}</div>
-                                        <div class="d-flex">
-                                            <div class="border">
-                                                <div class="d-flex mt-2 ms-2">
-                                                    <p>Nhân viên</p>
-                                                    <select name="nhanvien" class="form-select" style="width: 150px;height: 38px">
-                                                        <c:forEach var="nv" items="${lstNhanVien}">
-                                                            <option value="${nv.id}" label="${nv.ten}"></option>
-                                                        </c:forEach>
-                                                    </select>
-                                                    <a href="/admin/nhanvienview/nhanvien" class="btn btn-success mb-3" style="margin-left: 88px">Cập nhật</a>
-                                                </div>
-                                                <div class="d-flex mt-2 ms-2">
-                                                    <p>Khách hàng</p>
-                                                    <select name="khachhang" class="form-select" style="width: 150px;height: 38px">
-                                                        <c:forEach var="kh" items="${lstKhachHang}">
-                                                            <option value="${kh.id}" label="${kh.tenkh}"></option>
-                                                        </c:forEach>
-                                                    </select>
-                                                    <a href="/admin/khachhangview/khachhang" class="btn btn-success mb-3" style="margin-left: 88px">Cập nhật</a>
-                                                </div>
-                                            </div>
-                                            <div class="border ms-3">
-                                                <div class="mt-2 ms-2 me-3">
-                                                    <div>
-                                                        <label class="form-label">
-                                                            Mã hóa đơn
-                                                        </label>
-                                                    </div>
-                                                    <div class="mt-3 mb-3">
-                                                        <button class="btn btn-success" style="width: 100%">Tạo hóa đơn</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="margin-top: 84px">
-                        <div class="border">
-                            <div style="margin: 28px">
-                                <div class="d-flex">
-                                    <div>
-                                        <h5>Giỏ hàng</h5>
-                                        <table class="table">
-                                            <thead>
-                                            <th>STT</th>
-                                            <th>Tên SP</th>
-                                            <th>Mã SP</th>
-                                            <th>Số lượng</th>
-                                            <th>Đơn giá</th>
-                                            <th>Action</th>
-                                            </thead>
-                                            <tbody>
-                                            <c:forEach var="gh" items="${gioHang}" varStatus="stt">
-                                                <tr>
-                                                    <td>${stt.index+1}</td>
-                                                    <td>${gh.id}</td>
-                                                    <td>${gh.sanpham.tensp}</td>
-                                                    <td>${gh.soluong}</td>
-                                                    <td>${gh.dongia}</td>
-                                                    <td>
-                                                    <td>
-                                                        <a href="/admin/hoadonview/updategiohang?id=${gh.id}&action=decrease" class="btn btn-danger">-</a>
-                                                        <a href="/admin/hoadonview/updategiohang?id=${gh.id}&action=increase" class="btn btn-primary">+</a>
-                                                    </td>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div style="margin-left: 150px">
-                                        <form action="/admin/hoadonview/muaSPCT" method="post" name="hoadonchitiet">
-                                            <div class="d-flex">
-                                                    <div>
-                                                        <div class="d-flex">
-                                                            <strong>Ma HD:</strong>
-                                                            <form name="hoadon" method="post" action="/admin/hoadon/choose">
-                                                                <input type="text" name="hoadon" value="${hoadon.id}" readonly class="form-control" style="height: 28px;width: 155px">
-                                                            </form>
-                                                        </div>
-                                                        <div class="d-flex mt-3">
-                                                            <strong>Số lượng:</strong>
-                                                            <input type="text" id="tongSoLuong" class="form-control" name="soluong" value="${hoadonchitiet.soluong}" style="height: 28px;width: 128px" readonly><strong class="ms-3">VNĐ</strong>
-                                                        </div>
-                                                        <div class="d-flex mt-3">
-                                                            <strong>Tổng tiền:</strong>
-                                                            <input type="text" id="tongGia" name="dongia" class="form-control" value="${hoadonchitiet.dongia}" style="height: 28px;width: 128px" readonly>
-                                                            <strong class="ms-3">VNĐ</strong>
-                                                        </div>
-                                                    </div>
-                                                    <div style="margin-left: 55px">
-                                                        <div class="d-flex">
-                                                            <strong>SPCT:</strong>
-                                                            <select name="spct" id="sanphamchitietId" class="form-select ms-3" style="height: 32px;width: 250px;">
-                                                                <c:forEach var="gh" items="${gioHang}">
-                                                                    <option value="${gh.id}" label="${gh.id}"></option>
-                                                                </c:forEach>
-                                                            </select>
-                                                        </div>
-                                                        <div class="d-flex mt-3">
-                                                            <strong>Tiền khách đưa:</strong>
-                                                            <input type="text" class="form-control ms-3" style="width: 150px;height: 28px" name="tienKhachDua" value="${tienKhachDua}">
-                                                            <strong class="ms-3">VNĐ</strong>
-                                                        </div>
-                                                        <div>${errorMessage}</div>
-                                                        <div class="mt-3">
-                                                            <strong>Tiền thừa:</strong> ${tienThua}
-                                                        </div>
-                                                        <div class="mt-3">
-                                                            <button class="btn btn-danger">Mua</button>
-                                                        </div>
-                                                    </div>
-                                            </div>
-                                        </form>
-                                        <form action="/admin/hoadonview/muahang" method="get" name="hoadonchitiet">
-                                            <div class="d-flex justify-content-center mt-3">
-                                                <a href="" class="btn btn-success" style="width: 120px">Hủy</a>
-                                                <a href="/admin/hoadonview/thanhtoan?id=${hoadon.id}" class="btn btn-success" style="width: 120px;margin-left: 55px">Thanh toán</a>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="margin-top: 55px;width: 100%">
-                <div>
-                    <div class="text-danger">${messagesoluong}</div>
-                    <table class="table">
-                        <thead>
-                        <th>STT</th>
-                        <th>Mã SPCT</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Màu</th>
-                        <th>Kích thước</th>
-                        <th>số lượng</th>
-                        <th>đơn giá</th>
-                        <th>trạng thái</th>
+<div class="container">
+    <h1 class="text-center mb-4">Bán hàng</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Invoice Management Section -->
+            <div class="border-custom mb-4">
+                <h5 class="mb-4">Hóa đơn chờ</h5>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Mã hóa đơn</th>
+                        <th>Ngày mua</th>
+                        <th>Người nhận</th>
+                        <th>Nhân viên</th>
                         <th>Action</th>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="spct" items="${lstspct.content}" varStatus="ct">
-                            <tr>
-                                <td>${ct.index + 1}</td>
-                                <td>${spct.maspct}</td>
-                                <td>${spct.sanpham.tensp}</td>
-                                <td>${spct.mausac.tenmau}</td>
-                                <td>${spct.kichthuoc.tenkt}</td>
-                                <td>${spct.soluong}</td>
-                                <td>${spct.dongia}</td>
-                                <td>${spct.trangthai?"Còn hàng":"Hết hàng"}</td>
-                                <td>
-                                    <a href="/admin/hoadonview/muahang?id=${spct.id}" class="btn btn-primary">Mua</a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                    <div class="mt-3 text-center">
-                        <a href="/admin/hoadonview/banhang" class="btn btn-secondary">First</a>
-                        <a href="/admin/hoadonview/banhang?p=${lstspct.first?lstspct.totalPages-1:lstspct.number-1}" class="btn btn-secondary">Prev</a>
-                        <a href="/admin/hoadonview/banhang?p=${lstspct.last?0:lstspct.number+1}" class="btn btn-secondary">Next</a>
-                        <a href="/admin/hoadonview/banhang?p=${lstspct.totalPages-1}" class="btn btn-secondary">Last</a>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="hdbh" items="${lsthd}">
+                        <tr>
+                            <td>${hdbh.id}</td>
+                            <td>${hdbh.ngaymuahang}</td>
+                            <td>${hdbh.khachhang.tenkh}</td>
+                            <td>${hdbh.nhanvien.ten}</td>
+                            <td>
+                                <a href="/admin/hoadonview/huyhoadon?id=${hdbh.id}" class="btn btn-warning btn-sm">Hủy</a>
+                                <a href="/admin/hoadonview/choose/${hdbh.id}" class="btn btn-primary btn-sm">Chọn</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tạo hóa đơn -->
+            <div class="border-custom mb-4">
+                <h5 class="mb-3">Tạo hóa đơn</h5>
+                <form:form action="/admin/hoadonview/taoHD" method="post" modelAttribute="hoaDon">
+                    <div class="text-success mb-3">${messagehd}</div>
+                    <div class="text-danger">${errors}</div>
+                    <div class="mb-3">
+                        <label for="nhanvien" class="form-label">Nhân viên</label>
+                        <select id="nhanvien" name="nhanvien" class="form-select">
+                            <c:forEach var="nv" items="${lstNhanVien}">
+                                <option value="${nv.id}">${nv.ten}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="khachhang" class="form-label">Khách hàng</label>
+                        <select id="khachhang" name="khachhang" class="form-select">
+                            <c:forEach var="kh" items="${lstKhachHang}">
+                                <option value="${kh.id}">${kh.tenkh}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ngaymuahang" class="form-label">Ngày mua</label>
+                        <input type="date" id="ngaymuahang" name="ngaymuahang" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Tạo hóa đơn</button>
+                </form:form>
+            </div>
+
+            <!-- Giỏ hàng -->
+            <div class="border-custom mt-3-custom">
+                <h5 class="mb-3">Giỏ hàng</h5>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên SP</th>
+                        <th>Mã SP</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="gh" items="${gioHang}" varStatus="stt">
+                        <tr>
+                            <td>${stt.index + 1}</td>
+                            <td>${gh.sanpham.tensp}</td>
+                            <td>${gh.sanpham.masp}</td>
+                            <td>${gh.soluong}</td>
+                            <td>${gh.dongia}</td>
+                            <td>
+                                <a href="/admin/hoadonview/updategiohang?id=${gh.id}&action=decrease" class="btn btn-danger btn-sm">-</a>
+                                <a href="/admin/hoadonview/updategiohang?id=${gh.id}&action=increase" class="btn btn-primary btn-sm">+</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+
+                <!-- Purchase Form -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <form action="/admin/hoadonview/muaSPCT" method="post">
+                            <div class="mb-3">
+                                <label for="hoadonId" class="form-label">Mã HD:</label>
+                                <input type="text" id="hoadonId" name="hoadon" value="${hoadon.id}" readonly class="form-control">
+                            </div>
+                            <div class="text-danger">${info}</div>
+                            <div class="mb-3">
+                                <label for="soluong" class="form-label">Số lượng:</label>
+                                <input type="text" id="soluong" name="soluong" value="${hoadonchitiet.soluong}" readonly class="form-control">
+                                <small class="form-text text-muted">VNĐ</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dongia" class="form-label">Tổng tiền:</label>
+                                <input type="text" id="dongia" name="dongia" value="${hoadonchitiet.dongia}" readonly class="form-control">
+                                <small class="form-text text-muted">VNĐ</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tienKhachDua" class="form-label">Tiền khách đưa:</label>
+                                <input type="text" id="tienKhachDua" name="tienKhachDua" value="${tienKhachDua}" class="form-control">
+                                <small class="form-text text-muted">VNĐ</small>
+                            </div>
+                            <div class="mb-3">
+                                <span class="text-danger">${errorMessage}</span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Tiền thừa: ${tienThua} VNĐ</strong>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Thanh toán</button>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            <!-- Product List -->
+            <div class="border-custom mt-3-custom">
+                <h5 class="mb-3">Danh sách sản phẩm</h5>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Màu sắc</th>
+                        <th>Kích thước</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="spct" items="${lstspct.content}">
+                        <tr>
+                            <td>${spct.sanpham.tensp}</td>
+                            <td>${spct.mausac.tenmau}</td>
+                            <td>${spct.kichthuoc.tenkt}</td>
+                            <td>${spct.dongia}</td>
+                            <td>${spct.soluong}</td>
+                            <td>
+                                <a href="<c:url value='/admin/hoadonview/muahang?id=${spct.id}'/>" class="btn btn-info btn-sm">Thêm vào giỏ</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-pH5bLg02y4vOQ6hKojYbT62bdXIb0sm3FdFToQ6S37cHFF7fpp46LMEcFwFDC6cE" crossorigin="anonymous"></script>
 </body>
 </html>

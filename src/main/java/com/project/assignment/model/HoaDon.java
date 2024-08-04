@@ -2,6 +2,7 @@ package com.project.assignment.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -25,14 +26,15 @@ public class HoaDon {
     @JoinColumn(name = "IdKH",referencedColumnName = "ID")
     private KhachHang khachhang;
     @Column(name = "NgayMuaHang")
-    private LocalDate ngaymuahang;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date ngaymuahang;
     @Column(name = "TrangThai")
-    private int trangthai;
+    private int trangThai;
 
-    public HoaDon(NhanVien nhanvien, KhachHang khachhang, LocalDate ngaymuahang, int trangthai) {
+    public HoaDon(NhanVien nhanvien, KhachHang khachhang, Date ngaymuahang, int trangthai) {
         this.nhanvien = nhanvien;
         this.khachhang = khachhang;
         this.ngaymuahang = ngaymuahang;
-        this.trangthai = trangthai;
+        this.trangThai = trangthai;
     }
 }

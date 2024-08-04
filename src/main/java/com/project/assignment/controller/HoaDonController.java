@@ -2,20 +2,19 @@ package com.project.assignment.controller;
 
 import com.project.assignment.model.*;
 import com.project.assignment.reponsitory.*;
-import com.project.assignment.service.HoaDonChiTietSevice;
 import com.project.assignment.service.implement.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,44 +27,46 @@ public class HoaDonController {
     private final KhachHangIpl khachHangIpl;
     private final HoaDonRepo hoaDonRepo;
     private final HoaDonChiTietRepo hoaDonChiTietRepo;
-    private final HoaDonChiTietIpl hoaDonChiTietIpl;
     @Autowired
     HttpSession session;
 
     @GetMapping("/hoadon")
-    public String getHoaDon(@RequestParam(name = "p",defaultValue = "0") int p,Model model){
-        model.addAttribute("lsthd",hoaDonIpl.getAllHD(p));
+    public String getHoaDon(@RequestParam(name = "p", defaultValue = "0") int p, Model model) {
+        model.addAttribute("lsthd", hoaDonIpl.getAllHD(p));
         return "admin/hoadonview/hoadon";
     }
+
     @GetMapping("/banhang")
-   public String toIndex(@RequestParam(value = "p", defaultValue = "0") int page, Model model) {
+    public String toIndex(@RequestParam(value = "p", defaultValue = "0") int page, Model model) {
         List<SanPhamChiTiet> gioHang = (List<SanPhamChiTiet>) session.getAttribute("gioHang");
         if (gioHang == null) {
             gioHang = new ArrayList<>();
         }
         model.addAttribute("gioHang", gioHang);
-        model.addAttribute("lstspct",sanPhamChiTietEpl.getAllSPCT(page));
-        model.addAttribute("lsthdbh",hoaDonIpl.getLstHoaDonBanHang());
+        model.addAttribute("lstspct", sanPhamChiTietEpl.getAllSPCT(page));
+        model.addAttribute("lsthdbh", hoaDonIpl.getLstHoaDonBanHang());
+        model.addAttribute("hoaDon", new HoaDon());
+        model.addAttribute("lstNhanVien", nhanVienimp.getAllNVL());
+        model.addAttribute("lstKhachHang", khachHangIpl.getAllKh());
         return "admin/hoadonview/banhang";
     }
+
     @GetMapping("/muahang")
-    public String addSanPham(@RequestParam("id") Integer id,Model model,@Param("tienKhachDua") Double tienKhachDua){
+    public String addSanPham(@RequestParam("id") Integer id, @RequestParam(name = "tienKhachDua", defaultValue = "0") Double tienKhachDua, Model model) {
         SanPhamChiTiet sanPhamChiTiets = sanPhamChiTietEpl.getByID(id);
-        if(sanPhamChiTiets==null|| sanPhamChiTiets.getSoluong()<=0){
-            model.addAttribute("messagesoluong","sản phẩm đã hết");
+        if (sanPhamChiTiets == null || sanPhamChiTiets.getSoluong() <= 0) {
+            model.addAttribute("messagesoluong", "Sản phẩm đã hết");
             return "redirect:/admin/hoadonview/banhang";
         }
+
         List<SanPhamChiTiet> gioHang = (List<SanPhamChiTiet>) session.getAttribute("gioHang");
         if (gioHang == null) {
             gioHang = new ArrayList<>();
         }
-        HoaDonChiTiet hoadonchitiet = (HoaDonChiTiet) session.getAttribute("hoadonchitiet");
-        if (hoadonchitiet == null) {
-            hoadonchitiet = new HoaDonChiTiet();
-        }
+
         boolean sanPhamTonTai = false;
         for (SanPhamChiTiet spct : gioHang) {
-            if (spct.getMaspct().equals(sanPhamChiTiets.getMaspct())) {
+            if (spct.getId().equals(sanPhamChiTiets.getId())) {
                 spct.setSoluong(spct.getSoluong() + 1);
                 sanPhamTonTai = true;
                 break;
@@ -83,41 +84,50 @@ public class HoaDonController {
             spctMoi.setDongia(sanPhamChiTiets.getDongia());
             gioHang.add(spctMoi);
         }
+
         sanPhamChiTiets.setSoluong(sanPhamChiTiets.getSoluong() - 1);
-        if(sanPhamChiTiets.getSoluong()<=0){
+        if (sanPhamChiTiets.getSoluong() <= 0) {
             sanPhamChiTiets.setTrangthai(false);
         }
         sanPhamChiTietRepo.save(sanPhamChiTiets);
-        int tongSoLuong = 0;
-        double tongGia = 0.0;
 
-        for (SanPhamChiTiet spct : gioHang) {
-            int soluong = spct.getSoluong();
-            double gia = spct.getDongia();
+        double tongGia = gioHang.stream().mapToDouble(spct -> spct.getSoluong() * spct.getDongia()).sum();
+        int tongSoLuong = gioHang.stream().mapToInt(SanPhamChiTiet::getSoluong).sum();
+        double tienthua = tienKhachDua - tongGia;
 
-            tongSoLuong += soluong;
-            tongGia += soluong * gia;
+        HoaDonChiTiet hoadonchitiet = (HoaDonChiTiet) session.getAttribute("hoadonchitiet");
+        if (hoadonchitiet == null) {
+            hoadonchitiet = new HoaDonChiTiet();
         }
-        tienKhachDua =0.0;
-        double tienthua = tienKhachDua-tongGia;
         hoadonchitiet.setSoluong(tongSoLuong);
         hoadonchitiet.setDongia(tongGia);
+
         model.addAttribute("tongSoLuong", tongSoLuong);
         model.addAttribute("tongGia", tongGia);
-        model.addAttribute("tienThua",tienthua);
+        model.addAttribute("tienThua", tienthua);
         session.setAttribute("gioHang", gioHang);
         session.setAttribute("hoadonchitiet", hoadonchitiet);
         return "redirect:/admin/hoadonview/banhang";
     }
+
     @PostMapping("/muaSPCT")
-    public String muaTheoSPCT(@ModelAttribute("hoadonchitiet") HoaDonChiTiet hoaDonChiTiet, @RequestParam("tienKhachDua") Double tienKhachDua, Model model){
+    public String muaTheoSPCT(@ModelAttribute("hoadonchitiet") HoaDonChiTiet hoaDonChiTiet, @RequestParam(name = "tienKhachDua",defaultValue = "0.0") Double tienKhachDua, @RequestParam("hoadon") int id,Model model) {
         List<SanPhamChiTiet> gioHang = (List<SanPhamChiTiet>) session.getAttribute("gioHang");
         HoaDonChiTiet hoadonchitiet = (HoaDonChiTiet) session.getAttribute("hoadonchitiet");
         if (hoadonchitiet == null) {
             hoadonchitiet = new HoaDonChiTiet();
         }
-        if (gioHang == null) {
-            gioHang = new ArrayList<>();
+        if (gioHang == null || gioHang.isEmpty()) {
+            model.addAttribute("info", "Giỏ hàng của bạn đang trống, vui lòng thêm sản phẩm trước khi thanh toán.");
+            return "admin/hoadonview/banhang";
+        }
+        if (id <= 0) {
+            model.addAttribute("info", "Vui lòng chọn hóa đơn hợp lệ.");
+            return "admin/hoadonview/banhang";
+        }
+        if (tienKhachDua <= 0) {
+            model.addAttribute("errorMessage", "Vui lòng nhập số tiền khách đưa.");
+            return "admin/hoadonview/banhang";
         }
         List<HoaDonChiTiet> hoaDonChiTiets = new ArrayList<>();
         for (SanPhamChiTiet productDetail : gioHang) {
@@ -125,27 +135,36 @@ public class HoaDonController {
             hdct.setSpct(productDetail);
             hdct.setDongia(productDetail.getDongia());
             hdct.setSoluong(productDetail.getSoluong());
-            hoaDonChiTiets.add(hoaDonChiTiet);
+            hoaDonChiTiets.add(hdct);
         }
-        int tongSoLuong = 0;
-        double tongGia = 0.0;
-        for (SanPhamChiTiet spct : gioHang) {
-            tongSoLuong += spct.getSoluong();
-            tongGia += spct.getSoluong() * spct.getDongia();
+        if(tienKhachDua<=0){
+            model.addAttribute("errorMessage", "vui lòng nhập tiền");
         }
+        double tongGia = gioHang.stream().mapToDouble(spct -> spct.getSoluong() * spct.getDongia()).sum();
         double tienThua = tienKhachDua - tongGia;
-
-
+        if(tienKhachDua<tienThua){
+            model.addAttribute("errorMessage", "Số tiền chưa đủ!");
+        }
         if (tienThua < 0) {
             model.addAttribute("errorMessage", "Số tiền khách đưa không đủ để thanh toán hóa đơn.");
             return "admin/hoadonview/banhang";
         }
 
+        HoaDon hoaDon = hoaDonRepo.findById(id).orElse(null);
+        if (hoaDon == null) {
+            model.addAttribute("info", "Hóa đơn không tồn tại.");
+            return "admin/hoadonview/banhang";
+        }
+        else {
+            hoaDon.setTrangThai(2);
+            hoaDon.setNgaymuahang(new Date());
+            hoaDonRepo.save(hoaDon);
+        }
         for (HoaDonChiTiet hdcts : hoaDonChiTiets) {
-            if(hdcts.getHoadon().getTrangthai()==0){
-                hdcts.setTrangthai(2);
-                hoaDonChiTietIpl.thanhToanHoaDon(hdcts);
-            }
+            hdcts.setHoadon(hoaDon);
+            hdcts.setTrangthai(2);
+            hdcts.setTg(new Date());
+            hoaDonChiTietRepo.save(hdcts);
         }
 
         session.removeAttribute("hoadonchitiet");
@@ -153,148 +172,48 @@ public class HoaDonController {
 
         model.addAttribute("hoaDonChiTiet", hoaDonChiTiet);
         model.addAttribute("tienThua", tienThua);
-        return "redirect:/admin/hoadonview/banhang";
-    }
-    @GetMapping("/thanhtoan")
-    public String thanhToanHoaDon( @RequestParam("id") Integer id) {
-//        List<SanPhamChiTiet> gioHang = (List<SanPhamChiTiet>) session.getAttribute("gioHang");
-//        HoaDonChiTiet hoadonchitiet = (HoaDonChiTiet) session.getAttribute("hoadonchitiet");
-//        if (hoadonchitiet == null) {
-//            hoadonchitiet = new HoaDonChiTiet();
-//        }
-//        if (gioHang == null) {
-//            gioHang = new ArrayList<>();
-//        }
-//        List<HoaDonChiTiet> hoaDonChiTiets = new ArrayList<>();
-//        for (SanPhamChiTiet productDetail : gioHang) {
-//            HoaDonChiTiet hdct = new HoaDonChiTiet();
-//            hdct.setSpct(productDetail);
-//            hdct.setDongia(productDetail.getDongia());
-//            hdct.setSoluong(productDetail.getSoluong());
-//            hoaDonChiTiets.add(hoaDonChiTiet);
-//        }
-//        int tongSoLuong = 0;
-//        double tongGia = 0.0;
-//        for (SanPhamChiTiet spct : gioHang) {
-//            tongSoLuong += spct.getSoluong();
-//            tongGia += spct.getSoluong() * spct.getDongia();
-//        }
-//        double tienThua = tienKhachDua - tongGia;
-//
-//
-//        if (tienThua < 0) {
-//            model.addAttribute("errorMessage", "Số tiền khách đưa không đủ để thanh toán hóa đơn.");
-//            return "admin/hoadonview/banhang";
-//        }
-        session.removeAttribute("hoadonchitiet");
-        session.removeAttribute("gioHang");
-        for (HoaDonChiTiet hdcts : hoaDonChiTietRepo.findHoaDonChiTietByHoadonId(id)) {
-            if(hdcts.getHoadon().getTrangthai()==0){
-                hdcts.getHoadon().setTrangthai(2);
-                hdcts.setTrangthai(2);
-                hoaDonChiTietIpl.thanhToanHoaDon(hdcts);
-            }
-        }
 
-//        model.addAttribute("hoaDonChiTiet", hoaDonChiTiet);
-//        model.addAttribute("tienThua", tienThua);
-        return "redirect:/admin/hoadonview/banhang";
+        return "redirect:/admin/hoadonview/hoadon";
     }
     @GetMapping("/updategiohang")
-    public String soLuongGioHang(@RequestParam("id") Integer id, @RequestParam("action") String action, Model model,@RequestParam(name = "p",defaultValue = "0") int page) {
-        SanPhamChiTiet spct = sanPhamChiTietEpl.getByID(id);
-        List<SanPhamChiTiet> spctl = (List<SanPhamChiTiet>) session.getAttribute("gioHang");
-        if (spctl == null || spctl.isEmpty()) {
-            model.addAttribute("messagesoluong", "Không còn sản phẩm trong giỏ hàng");
-            return "redirect:/admin/hoadonview/banhang";
-        }
-
-        Object hoadonchitietObj = session.getAttribute("hoadonchitiet");
-        if (hoadonchitietObj instanceof HoaDonChiTiet) {
-            HoaDonChiTiet hoadonchitiet = (HoaDonChiTiet) hoadonchitietObj;
-
-            int tongSoLuong = 0;
-            double tongGia = 0.0;
-            boolean sanphamtontai = false;
-
-            for (SanPhamChiTiet sanPhamChiTiet : spctl) {
-                if (sanPhamChiTiet.getMaspct().equals(spct.getMaspct())) {
-                    if ("increase".equals(action) && spct.getSoluong() > 0) {
-                        sanPhamChiTiet.setSoluong(sanPhamChiTiet.getSoluong() + 1);
-                        spct.setSoluong(spct.getSoluong() - 1);
-                        if (spct.getSoluong() == 0) {
-                            model.addAttribute("messagesoluong", "Hết hàng");
-                        }
-                        if (hoadonchitiet.getSoluong() == 0) {
-                            model.addAttribute("messagehoadon", "Hết hàng");
-                        }
-
-                        // Tính lại tổng số lượng và tổng giá
-                        for (SanPhamChiTiet sp : spctl) {
-                            int soluong = sp.getSoluong();
-                            double gia = sp.getDongia();
-
-                            tongSoLuong += soluong;
-                            tongGia += soluong * gia;
-                        }
-                        double tienKhachDua = 0.0;
-                        double tienthua = tienKhachDua - tongGia;
-                        hoadonchitiet.setSoluong(tongSoLuong);
-                        hoadonchitiet.setDongia(tongGia);
-                        model.addAttribute("tienKhachDua", tienKhachDua);
-                        model.addAttribute("tongSoLuong", tongSoLuong);
-                        model.addAttribute("tongGia", tongGia);
-                        model.addAttribute("tienThua", tienthua);
-                        sanphamtontai = true;
-                    } else if ("decrease".equals(action) && sanPhamChiTiet.getSoluong() > 0) {
-                        sanPhamChiTiet.setSoluong(sanPhamChiTiet.getSoluong() - 1);
+    public String updateGioHang(@RequestParam("id") Integer id, @RequestParam("action") String action, Model model) {
+        List<SanPhamChiTiet> gioHang = (List<SanPhamChiTiet>) session.getAttribute("gioHang");
+        if (gioHang != null) {
+            for (SanPhamChiTiet spct : gioHang) {
+                if (spct.getId().equals(id)) {
+                    if ("increase".equals(action)) {
                         spct.setSoluong(spct.getSoluong() + 1);
-                        if (sanPhamChiTiet.getSoluong() == 0) {
-                            spctl.remove(sanPhamChiTiet);
-                        }
-                        for (SanPhamChiTiet spd : spctl){
-                            int soluong = spd.getSoluong();
-                            double gia = spd.getDongia();
-
-                            tongSoLuong = soluong;
-                            tongGia = soluong * gia;
-                        }
-                        double tienKhachDua = 0.0;
-                        double tienthua = tienKhachDua - tongGia;
-                        hoadonchitiet.setSoluong(tongSoLuong);
-                        hoadonchitiet.setDongia(tongGia);
-                        model.addAttribute("tienKhachDua", tienKhachDua);
-                        model.addAttribute("tongSoLuong", tongSoLuong);
-                        model.addAttribute("tongGia", tongGia);
-                        model.addAttribute("tienThua", tienthua);
-                        sanphamtontai = true;
+                    } else if ("decrease".equals(action) && spct.getSoluong() > 1) {
+                        spct.setSoluong(spct.getSoluong() - 1);
+                    } else if ("remove".equals(action)) {
+                        gioHang.remove(spct);
                     }
-                    sanPhamChiTietRepo.save(spct);
                     break;
                 }
             }
-
-            if (!sanphamtontai) {
-                model.addAttribute("messagesoluong", "Sản phẩm không còn trong giỏ hàng");
-            }
-        } else {
-            model.addAttribute("messagesoluong", "Không còn sản phẩm trong giỏ hàng");
-            return "redirect:/admin/hoadonview/banhang";
+            session.setAttribute("gioHang", gioHang);
         }
-
-        session.setAttribute("gioHang", spctl);
-        model.addAttribute("lstspct",sanPhamChiTietEpl.getAllSPCT(page));
-        return "forward:/admin/hoadonview/banhang";
-    }
-    @PostMapping("/hoadon-giohang")
-    public String hoaDonGioHang(HoaDonChiTiet hoaDonChiTiet,Model model){
         return "redirect:/admin/hoadonview/banhang";
     }
+
+    @GetMapping("/xemhoadon")
+    public String xemHoaDon(@RequestParam("id") Integer id, Model model) {
+        HoaDon hoaDon = hoaDonRepo.findById(id).orElse(null);
+        if (hoaDon != null) {
+            List<HoaDonChiTiet> hoaDonChiTiets = hoaDonChiTietRepo.findHoaDonChiTietByHoadonId(id);
+            model.addAttribute("hoaDon", hoaDon);
+            model.addAttribute("hoaDonChiTiets", hoaDonChiTiets);
+        }
+        return "admin/hoadonview/hoadon_detail";
+    }
     @PostMapping("/taoHD")
-    public String addHoaDon(HoaDon hoadon,
-                            Model model){
-        hoaDonIpl.create(hoadon);
-        model.addAttribute("messagehd", "Tạo hóa đơn thành công");
+    public String taoHoaDon(@Valid @ModelAttribute("hoaDon") HoaDon hoaDon, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("messagehd", "Có lỗi xảy ra khi tạo hóa đơn");
+            model.addAttribute("errors", result.getAllErrors());
+            return "redirect:/admin/hoadonview/banhang";
+        }
+        hoaDonIpl.create(hoaDon);
         return "redirect:/admin/hoadonview/banhang";
     }
     @GetMapping("/banhangnew")
@@ -316,19 +235,13 @@ public class HoaDonController {
         List<HoaDon> listhd = new ArrayList<>();
         listhd.remove(dh);
         HoaDon hoaDon = hoaDonRepo.findById(id).orElse(null);
-        if(hoaDon!=null && hoaDon.getTrangthai()==0){
-            hoaDon.setTrangthai(1);
+        if(hoaDon!=null && hoaDon.getTrangThai()==0){
+            hoaDon.setTrangThai(1);
             hoaDonRepo.save(hoaDon);
         }
         model.addAttribute("lsthdbh",hoaDonIpl.getLstHoaDonBanHang());
         return "redirect:/admin/hoadonview/banhang";
     }
-//    @GetMapping("/choosegiohang/{id}")
-//    public String getChooseGioHang(@PathVariable("id") Integer id,Model model,@RequestParam(name = "p",defaultValue = "0")int page){
-//        model.addAttribute("spctChoose",sanPhamChiTietEpl.getByID(id));
-//        model.addAttribute("lstspct",sanPhamChiTietEpl.getAllSPCT(page));
-//        return "forward:/admin/hoadonview/banhang";
-//    }
     @GetMapping("/choose/{id}")
     public String getChooseHD(@PathVariable("id") Integer id,@RequestParam(name = "p",defaultValue = "0")int page,Model model){
         model.addAttribute("lstspct",sanPhamChiTietEpl.getAllSPCT(page));

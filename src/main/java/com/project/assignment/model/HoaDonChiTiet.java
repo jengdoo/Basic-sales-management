@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -33,12 +34,12 @@ public class HoaDonChiTiet {
     private Integer soluong;
     @Column(name = "DonGia")
     private Double dongia;
-    @Column(name = "ThoiGian")
-    private LocalTime tg;
+    @Column(name = "ThoiGian",nullable = false)
+    private Date tg;
     @Column(name = "TrangThai")
     private Integer trangthai;
 
-    public HoaDonChiTiet(HoaDon hoadon, SanPhamChiTiet spct, Integer soluong, Double dongia, LocalTime tg, Integer trangthai) {
+    public HoaDonChiTiet(HoaDon hoadon, SanPhamChiTiet spct, Integer soluong, Double dongia, Date tg, Integer trangthai) {
         this.hoadon = hoadon;
         this.spct = spct;
         this.soluong = soluong;
